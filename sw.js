@@ -4,8 +4,8 @@ self.addEventListener("install", function(event) {
   event.waitUntil(
     caches.open(staticCacheName).then(function(cache) {
     return cache.addAll([
-      'index.html',
-      'restaurant.html',
+      '/index.html',
+      '/restaurant.html',
       '/css/main.css',
       '/css/responsive.css',
       '/js/dbhelper.js',
@@ -24,8 +24,7 @@ self.addEventListener("install", function(event) {
 
 self.addEventListener('activate', function(event) {
 	event.waitUntil(
-		caches.keys()
-		.then(function(cacheNames) {
+		caches.keys().then(function(cacheNames) {
 			return Promise.all(
 				cacheNames.filter(function(cacheName) {
 					return cacheName.startsWith('restaurant-') &&
@@ -41,8 +40,27 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event) {
 	event.respondWith(
 		caches.match(event.request)
-		.then(function(response) {
-			return response || fetch(event.request);
+    .then(function(response) {
+      // Cache hit - return response
+      if (response) {
+        return response;
+      }
+
+      return fetch(event.request).then(
+        function(response) {
+          // Check if we received a valid response
+          if(!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+
+          var responseToCache = response.clone();
+
+          caches.open(staticCacheName)
+            .then(function(cache) {
+              cache.put(event.request, responseToCache);
+            });
+
+          return response;
 		})
 	);
 });
