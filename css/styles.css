@@ -176,6 +176,9 @@ nav h1 a {
   padding: 0 20px;
   height: 25px;
 }
+#restaurants-list h2 {
+    padding: 20px 20px 0;
+}
 #restaurants-list p {
 	width: 55%;
   margin: 0;
