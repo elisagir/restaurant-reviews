@@ -216,10 +216,6 @@ nav h1 a {
   height: 100%;
   width: 100%;
 }
-#restaurant-container {
-  position: relative;
-  width: 100%;
-}
 #restaurant-name {
   color: #fd8c7f;
   font-family: "Open Sans", Arial,sans-serif;
